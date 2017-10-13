@@ -4,9 +4,19 @@ if (!isset($_REQUEST)) {
     return;
 }
 
+require_once('./vendor/autoload.php');
+
+$dotenv = new \Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+
+$vkGroupID = getenv('VK_GROUP_ID');
+$serverAnswer = getenv('SERVER_ANSWER');
+$telegramChatId = getenv('TELEGRAM_CHAT_ID');
+$telegramToken = getenv('TELEGRAM_TOKEN');
+
 //Строка для подтверждения адреса сервера из настроек Callback API
 $answer = [
-    vkGroupID => 'ServerAnswer',
+    $vkGroupID => $serverAnswer,
 ];
 
 
@@ -233,7 +243,7 @@ function sendMessage($chatId, $token, $msg) {
     $result = file_get_contents("https://api.telegram.org/bot{$token}/sendMessage?chat_id={$chatId}&text={$msg}");
 }
 
-sendMessage(telegramChatId, 'telegramToken', $telegramMessage);
+sendMessage($telegramChatId, $telegramToken, $telegramMessage);
 
 // А вдруг в сообщении ничего нет?
 if ($telegramMessage) {
